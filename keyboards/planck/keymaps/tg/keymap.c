@@ -18,8 +18,6 @@ enum custom_keycodes {
   RSFT_K = MT(MOD_RSFT, KC_K),
   LALT_L = MT(MOD_LALT, KC_L),
   RGUI_SC = MT(MOD_RGUI, KC_SCLN),
-  RALT_V = MT(MOD_RALT, KC_V),
-  RALT_M = MT(MOD_RALT, KC_M),
 
   LTHR_TB = LT(1, KC_TAB),
   LGUI_SP = MT(MOD_LGUI, KC_SPC),
@@ -27,27 +25,16 @@ enum custom_keycodes {
 
   CTRL_LE = LCTL(KC_LEFT),
   CTRL_RI = LCTL(KC_RGHT),
-  SHFT_LE = LSFT(KC_LEFT),
-  SHFT_DO = LSFT(KC_DOWN),
-  SHFT_UP = LSFT(KC_UP),
-  SHFT_RI = LSFT(KC_RGHT),
-  SHFT_HO = LSFT(KC_HOME),
-  CT_SF_L = LCTL(LSFT(KC_LEFT)),
-  SF_PGDN = LSFT(KC_PGDN),
-  SF_PGUP = LSFT(KC_PGUP),
-  CT_SF_R = LCTL(LSFT(KC_RIGHT)),
-  SHFT_EN = LSFT(KC_END),
-};
-
-enum {
-    W_K,
-    Q_K,
-};
-
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [W_K] = ACTION_TAP_DANCE_DOUBLE(KC_W, LALT(KC_BSPC)),
-  [Q_K] = ACTION_TAP_DANCE_DOUBLE(KC_Q, LALT(KC_D)),
+  /* SHFT_LE = LSFT(KC_LEFT), */
+  /* SHFT_DO = LSFT(KC_DOWN), */
+  /* SHFT_UP = LSFT(KC_UP), */
+  /* SHFT_RI = LSFT(KC_RGHT), */
+  /* SHFT_HO = LSFT(KC_HOME), */
+  /* CT_SF_L = LCTL(LSFT(KC_LEFT)), */
+  /* SF_PGDN = LSFT(KC_PGDN), */
+  /* SF_PGUP = LSFT(KC_PGUP), */
+  /* CT_SF_R = LCTL(LSFT(KC_RIGHT)), */
+  /* SHFT_EN = LSFT(KC_END), */
 };
 
 
@@ -59,22 +46,6 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
             return MIDDLE_TAPPING_TERM;
         case RSFT_T(KC_K):
             return MIDDLE_TAPPING_TERM;
-        /* case RALT_T(KC_V): */
-        /*     return SHORT_TAPPING_TERM; */
-        /* case RALT_T(KC_K): */
-        /*     return SHORT_TAPPING_TERM; */
-        /* case RALT_T(KC_I): */
-        /*     return SHORT_TAPPING_TERM; */
-        /* case RALT_T(KC_O): */
-        /*     return SHORT_TAPPING_TERM; */
-        /* case RALT_T(KC_E): */
-        /*     return SHORT_TAPPING_TERM; */
-
-        case TD(Q_K):
-            return TAP_DANCE_TAPPING_TERM;
-        case TD(W_K):
-            return TAP_DANCE_TAPPING_TERM;
-
         default:
             return TAPPING_TERM;
     }
@@ -85,7 +56,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_ortho_4x12(
                           _______, TD(Q_K), TD(W_K), KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______,
                           TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
-                          /* _______, KC_Z,    KC_X,    KC_C,    RALT_V,  KC_B,    KC_N,    RALT_M,  KC_COMM, KC_DOT,  KC_SLSH, _______, */
                           _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
                           _______, _______, _______, KC_BSPC, LTHR_TB, LGUI_SP, LGUI_SP, LFOU_ES, KC_ENT,  KC_RALT, _______, _______
                           ),
@@ -117,12 +87,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           _______, _______, _______, _______, TO(0),   _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_BSPC,
                           KC_TRNS, _______, _______, _______, _______, KC_END,  KC_HOME, CTRL_LE, KC_PGDN, KC_PGUP, CTRL_RI, KC_END,
                           _______, _______, _______, _______, TO(0),   _______, _______, KC_END,  _______, _______, _______, _______,
-                          _______, _______, _______, KC_BSPC, _______, TG(5),   TG(5),   _______, KC_ENT,  _______, _______, _______
+                          _______, _______, _______, KC_BSPC, _______, _______, _______, _______, KC_ENT,  _______, _______, _______
                           ),
-  [5] = LAYOUT_ortho_4x12(
-                          _______, _______, _______, _______, _______, _______, _______, SHFT_LE, SHFT_DO, SHFT_UP, SHFT_RI, KC_BSPC,
-                          _______, _______, _______, _______, _______, _______, SHFT_HO, CT_SF_L, SF_PGDN, SF_PGUP, CT_SF_R, SHFT_EN,
-                          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                          _______, _______, _______, _______, _______, KC_TRNS, KC_TRNS, _______, _______, _______, _______, _______
-                          )
+  /* [5] = LAYOUT_ortho_4x12( */
+  /*                         _______, _______, _______, _______, _______, _______, _______, SHFT_LE, SHFT_DO, SHFT_UP, SHFT_RI, KC_BSPC, */
+  /*                         _______, _______, _______, _______, _______, _______, SHFT_HO, CT_SF_L, SF_PGDN, SF_PGUP, CT_SF_R, SHFT_EN, */
+  /*                         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, */
+  /*                         _______, _______, _______, _______, _______, KC_TRNS, KC_TRNS, _______, _______, _______, _______, _______ */
+  /*                         ) */
 };
