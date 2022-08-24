@@ -33,17 +33,6 @@ enum custom_keycodes {
   SHFT_EN = LSFT(KC_END),
 };
 
-/* enum { */
-/*   W_K, */
-/*   Q_K, */
-/* }; */
-
-
-/* qk_tap_dance_action_t tap_dance_actions[] = { */
-/*   [W_K] = ACTION_TAP_DANCE_DOUBLE(KC_W, LALT(KC_BSPC)), */
-/*   [Q_K] = ACTION_TAP_DANCE_DOUBLE(KC_Q, LALT(KC_D)), */
-/* }; */
-
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -53,12 +42,6 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     return MIDDLE_TAPPING_TERM;
   case RSFT_T(KC_K):
     return MIDDLE_TAPPING_TERM;
-
-  /* case TD(Q_K): */
-  /*   return TAP_DANCE_TAPPING_TERM; */
-  /* case TD(W_K): */
-  /*   return TAP_DANCE_TAPPING_TERM; */
-
   default:
     return TAPPING_TERM;
   }
@@ -70,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                            _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______,
                            TO(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,                         KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
                            _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                                               KC_BSPC, LSYM_TB, _______,    LGUI_SP, LNUM_ES, KC_ENT
+                                                               KC_BSPC, LSYM_TB, MO(4),     LGUI_SP, LNUM_ES, KC_ENT
                            ),
 
   [1] = LAYOUT_split_3x6_3(
@@ -98,15 +81,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                            _______, _______, _______, _______, _______, _______,                      _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
                            TG(4),   _______, _______, _______, _______, _______,                      KC_HOME, CTRL_LE, KC_PGDN, KC_PGUP, CTRL_RI, KC_END,
                            _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-                                                               KC_BSPC, _______, TO(5),      TO(5),   _______, KC_ENT
+                                                               KC_BSPC, LSYM_TB, _______,    LGUI_SP, LNUM_ES, KC_ENT
                            ),
 
-  [5] = LAYOUT_split_3x6_3(
-                           _______, _______, _______, _______, _______, _______,                      _______, SHFT_LE, SHFT_DO, SHFT_UP, SHFT_RI, _______,
-                           _______, _______, _______, _______, _______, _______,                      SHFT_HO, CT_SF_L, SF_PGDN, SF_PGUP, CT_SF_R, SHFT_EN,
-                           _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-                                                               KC_BSPC, _______, TO(4),      TO(4),   _______, KC_ENT
-                           )
+  /* [5] = LAYOUT_split_3x6_3( */
+  /*                          _______, _______, _______, _______, _______, _______,                      _______, SHFT_LE, SHFT_DO, SHFT_UP, SHFT_RI, _______, */
+  /*                          _______, _______, _______, _______, _______, _______,                      SHFT_HO, CT_SF_L, SF_PGDN, SF_PGUP, CT_SF_R, SHFT_EN, */
+  /*                          _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______, */
+  /*                                                              KC_BSPC, _______, TO(4),      TO(4),   _______, KC_ENT */
+  /*                          ) */
 
 };
 
@@ -126,61 +109,33 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 #define L_MOVEMENT_SHFT 32
 
 
-/* void oled_render_layer_state(void) { */
-/*   oled_write_P(PSTR("Layer: "), false); */
-/*   switch (layer_state) { */
-/*   case L_BASE: */
-/*     oled_write_ln_P(PSTR("Default"), false); */
-/*     break; */
-/*   case L_LOWER: */
-/*     oled_write_ln_P(PSTR("Lower"), false); */
-/*     break; */
-/*   case L_RAISE: */
-/*     oled_write_ln_P(PSTR("Raise"), false); */
-/*     break; */
-/*   case L_MOVEMENT: */
-/*     oled_write_ln_P(PSTR("Movement"), false); */
-/*     break; */
-/*   case L_MOVEMENT_SHFT: */
-/*     oled_write_ln_P(PSTR("Movement shift"), false); */
-/*     break; */
-/*   case L_ADJUST: */
-/*   case L_ADJUST|L_LOWER: */
-/*   case L_ADJUST|L_RAISE: */
-/*   case L_ADJUST|L_LOWER|L_RAISE: */
-/*     oled_write_ln_P(PSTR("Adjust"), false); */
-/*     break; */
+/* char keylog_str[24] = {}; */
+
+/* const char code_to_name[60] = { */
+/*   ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', */
+/*   'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', */
+/*   'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', */
+/*   '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', */
+/*   'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\', */
+/*   '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '}; */
+
+/* void set_keylog(uint16_t keycode, keyrecord_t *record) { */
+/*   char name = ' '; */
+/*   if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || */
+/*       (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) { keycode = keycode & 0xFF; } */
+/*   if (keycode < 60) { */
+/*     name = code_to_name[keycode]; */
 /*   } */
+
+/*   // update keylog */
+/*   snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c", */
+/*            record->event.key.row, record->event.key.col, */
+/*            keycode, name); */
 /* } */
 
-
-char keylog_str[24] = {};
-
-const char code_to_name[60] = {
-  ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-  'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-  'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
-  '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
-
-void set_keylog(uint16_t keycode, keyrecord_t *record) {
-  char name = ' ';
-  if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) ||
-      (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) { keycode = keycode & 0xFF; }
-  if (keycode < 60) {
-    name = code_to_name[keycode];
-  }
-
-  // update keylog
-  snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c",
-           record->event.key.row, record->event.key.col,
-           keycode, name);
-}
-
-void oled_render_keylog(void) {
-  oled_write(keylog_str, false);
-}
+/* void oled_render_keylog(void) { */
+/*   oled_write(keylog_str, false); */
+/* } */
 
 
 void oled_render_nothing(void) {
@@ -251,9 +206,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 /*             ); */
 /*   } */
 /* #endif */
-  if (record->event.pressed) {
-    set_keylog(keycode, record);
-  }
+  /* if (record->event.pressed) { */
+  /*   set_keylog(keycode, record); */
+  /* } */
   /* if (!process_caps_word(keycode, record)) { */
   /*   return false; */
   /* } */
