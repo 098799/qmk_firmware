@@ -16,3 +16,5 @@ MAGIC_ENABLE = no
 MUSIC_ENABLE = no
 
 LTO_ENABLE = yes
+
+SRC += features/achordion.c
