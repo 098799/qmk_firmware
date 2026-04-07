@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_CAPS, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TMUX_B,
         TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,                         KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
         TG(2),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                            KC_BSPC, OSL(1), MO(4),      LGUI_SP, OSL(2),  KC_ENT
+                                            KC_BSPC, OSL(1), MO(4),      LGUI_SP, KC_ESC,  KC_ENT
         ),
 
   [1] = LAYOUT_split_3x6_3(
@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
         _______, _______, MS_BTN3, MS_BTN2, MS_BTN1, _______,                      _______, MS_LEFT, MS_DOWN, MS_UP,   MS_RGHT, _______,
         _______, _______, MS_ACL2, MS_ACL1, MS_ACL0, _______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
-                                            KC_DEL,  MO(3),   _______,    _______, KC_ESC,  _______
+                                            KC_DEL,  MO(3),   _______,    _______, _______, _______
         ),
 
   [3] = LAYOUT_split_3x6_3(
@@ -80,14 +80,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______,                      _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
         TG(4),   _______, _______, _______, _______, _______,                      KC_HOME, CTRL_LE, KC_PGDN, KC_PGUP, CTRL_RI, KC_END,
         _______, _______, _______, _______, _______, LGUI__B,                      LGUI__N, _______, _______, _______, _______, _______,
-                                            KC_BSPC, OSL(1), _______,    LGUI_SP, OSL(2), KC_ENT
+                                            KC_BSPC, OSL(1), _______,    LGUI_SP, KC_ESC, KC_ENT
                            ),
 
   [5] = LAYOUT_split_3x6_3(
         _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
         _______, KC_QUES, KC_COLN, KC_MINS, KC_UNDS, KC_2,                         KC_1,    KC_EQL,  KC_PLUS, KC_LBRC, KC_RBRC, KC_0,
         TG(5),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                            KC_BSPC, OSL(1), MO(4),      LGUI_SP, OSL(2), KC_ENT
+                                            KC_BSPC, OSL(1), MO(4),      LGUI_SP, KC_ESC, KC_ENT
                            )
 
 };
@@ -207,15 +207,9 @@ bool achordion_chord(uint16_t tap_hold_keycode,
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_achordion(keycode, record)) { return false; }
 
-  if (record->event.pressed && get_mods()) {
-    if (keycode == OSL(1)) {
-      tap_code(KC_TAB);
-      return false;
-    }
-    if (keycode == OSL(2)) {
-      tap_code(KC_ESC);
-      return false;
-    }
+  if (keycode == OSL(1) && record->event.pressed && get_mods()) {
+    tap_code(KC_TAB);
+    return false;
   }
 
   return true;
