@@ -6,7 +6,7 @@ enum custom_keycodes {
   LALT_S = MT(MOD_LALT, KC_S),
   LSFT_D = MT(MOD_LSFT, KC_D),
   LCTL_F = MT(MOD_LCTL, KC_F),
-  RCTL_J = MT(MOD_RCTL, KC_J),
+  LCTL_J = MT(MOD_LCTL, KC_J),
   RSFT_K = MT(MOD_RSFT, KC_K),
   LALT_L = MT(MOD_LALT, KC_L),
   RGUI_SC = MT(MOD_RGUI, KC_SCLN),
@@ -81,7 +81,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_ortho_4x12(
                           KC_CAPS, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TMUX_B,
-                          TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    RCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
+                          TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
                           TG(2),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
                           _______, _______, _______, KC_BSPC, OSL(1), FOUR_SP, FOUR_SP, LT(2, KC_ESC), KC_ENT,  KC_RALT, _______, _______
                           ),
@@ -116,7 +116,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [5] = LAYOUT_ortho_4x12(
                           KC_CAPS, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-                          TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    RCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
+                          TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
                           TG(5),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
                           _______, _______, _______, KC_BSPC, OSL(1), FOUR_SP, FOUR_SP, LT(2, KC_ESC), KC_ENT,  KC_RALT, _______, _______
                           )
@@ -134,6 +134,10 @@ bool achordion_chord(uint16_t tap_hold_keycode,
                      uint16_t other_keycode,
                      keyrecord_t* other_record) {
   switch (tap_hold_keycode) {
+    case LT(2, KC_ESC):
+      return true;
+    case LCTL_J:
+      return true;
     case LALT_S:
       return true;
     case FOUR_SP:
@@ -165,15 +169,18 @@ bool achordion_chord(uint16_t tap_hold_keycode,
   return achordion_opposite_hands(tap_hold_record, other_record);
 }
 
+static bool right_ctrl_held = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+  if (keycode == LCTL_J) {
+    right_ctrl_held = record->event.pressed;
+  }
+
   if (!process_achordion(keycode, record)) { return false; }
 
-  if (keycode == OSL(1) && record->event.pressed) {
-    uint8_t mods = get_mods();
-    if (mods & MOD_BIT(KC_RCTL)) {
-      tap_code(KC_TAB);
-      return false;
-    }
+  if (keycode == OSL(1) && record->event.pressed && right_ctrl_held) {
+    tap_code(KC_TAB);
+    return false;
   }
 
   return true;
