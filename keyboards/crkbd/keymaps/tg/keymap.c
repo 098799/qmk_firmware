@@ -14,7 +14,6 @@ enum custom_keycodes {
 
   LSYM_TB = LT(1, KC_TAB),
   LGUI_SP = MT(MOD_LGUI, KC_SPC),
-  LNUM_ES = LT(2, KC_ESCAPE),
 
   LGUI__B = LGUI(KC_B),
   LGUI__N = LGUI(KC_N),
@@ -53,8 +52,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
         KC_CAPS, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TMUX_B,
         TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,                         KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
-        TG(5),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                            KC_BSPC, LSYM_TB, MO(4),      LGUI_SP, LNUM_ES, KC_ENT
+        TG(2),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
+                                            KC_BSPC, LSYM_TB, MO(4),      LGUI_SP, KC_ESC,  KC_ENT
         ),
 
   [1] = LAYOUT_split_3x6_3(
@@ -82,14 +81,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______,                      _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
         TG(4),   _______, _______, _______, _______, _______,                      KC_HOME, CTRL_LE, KC_PGDN, KC_PGUP, CTRL_RI, KC_END,
         _______, _______, _______, _______, _______, LGUI__B,                      LGUI__N, _______, _______, _______, _______, _______,
-                                            KC_BSPC, LSYM_TB, _______,    LGUI_SP, LNUM_ES, KC_ENT
+                                            KC_BSPC, LSYM_TB, _______,    LGUI_SP, KC_ESC, KC_ENT
                            ),
 
   [5] = LAYOUT_split_3x6_3(
         _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
         _______, KC_QUES, KC_COLN, KC_MINS, KC_UNDS, KC_2,                         KC_1,    KC_EQL,  KC_PLUS, KC_LBRC, KC_RBRC, KC_0,
         TG(5),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                            KC_BSPC, LSYM_TB, MO(4),      LGUI_SP, LNUM_ES, KC_ENT
+                                            KC_BSPC, LSYM_TB, MO(4),      LGUI_SP, KC_ESC, KC_ENT
                            )
 
 };
@@ -177,8 +176,6 @@ bool achordion_chord(uint16_t tap_hold_keycode,
   switch (tap_hold_keycode) {
     case LSYM_TB:
       return true;
-    case LNUM_ES:
-      return true;
     case LALT_S:
       return true;
     case MO(4):
@@ -224,7 +221,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       rgblight_disable();
       break;
     case 2:
-      rgblight_disable();
+      rgblight_enable();
+      rgblight_sethsv_eeprom_helper(150, 255, 255, true);
       break;
     case 3:
       rgblight_disable();
