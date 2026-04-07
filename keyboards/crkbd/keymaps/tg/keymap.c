@@ -173,6 +173,14 @@ bool achordion_chord(uint16_t tap_hold_keycode,
                      uint16_t other_keycode,
                      keyrecord_t* other_record) {
   switch (tap_hold_keycode) {
+    case LT(2, KC_ESC):
+      return true;
+    case LCTL_J:
+      return true;
+    case RSFT_K:
+      return true;
+    case LALT_L:
+      return true;
     case LALT_S:
       return true;
     case MO(4):

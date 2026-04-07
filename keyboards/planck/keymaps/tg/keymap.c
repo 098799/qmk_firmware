@@ -138,6 +138,10 @@ bool achordion_chord(uint16_t tap_hold_keycode,
       return true;
     case LCTL_J:
       return true;
+    case RSFT_K:
+      return true;
+    case LALT_L:
+      return true;
     case LALT_S:
       return true;
     case FOUR_SP:
