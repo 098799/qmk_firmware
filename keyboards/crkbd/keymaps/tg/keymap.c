@@ -1,6 +1,4 @@
 #include QMK_KEYBOARD_H
-/* #include "features/caps_word.h" */
-#include <stdio.h>
 #include "features/achordion.h"
 
 
@@ -13,8 +11,6 @@ enum custom_keycodes {
   RSFT_K = MT(MOD_RSFT, KC_K),
   LALT_L = MT(MOD_LALT, KC_L),
   RGUI_SC = MT(MOD_RGUI, KC_SCLN),
-  RALT_V = MT(MOD_RALT, KC_V),
-  RALT_M = MT(MOD_RALT, KC_M),
 
   LSYM_TB = LT(1, KC_TAB),
   LGUI_SP = MT(MOD_LGUI, KC_SPC),
@@ -56,8 +52,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
         KC_CAPS, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TMUX_B,
-        TO(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,                         KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
-        TO(5),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_F13,
+        TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,                         KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
+        TG(5),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
                                             KC_BSPC, LSYM_TB, MO(4),      LGUI_SP, LNUM_ES, KC_ENT
         ),
 
@@ -70,15 +66,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [2] = LAYOUT_split_3x6_3(
         _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-        _______, _______, KC_BTN3, KC_BTN2, KC_BTN1, _______,                      _______, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______,
-        _______, _______, KC_ACL2, KC_ACL1, KC_ACL0, _______,                      _______, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______,
+        _______, _______, MS_BTN3, MS_BTN2, MS_BTN1, _______,                      _______, MS_LEFT, MS_DOWN, MS_UP,   MS_RGHT, _______,
+        _______, _______, MS_ACL2, MS_ACL1, MS_ACL0, _______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
                                             KC_DEL,  MO(3),   _______,    _______, _______, _______
         ),
 
   [3] = LAYOUT_split_3x6_3(
-        RESET,   _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-        _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, _______,
-        _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,                       KC_F12,  RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, _______,
+        QK_BOOT, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
+        _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   UG_TOGG, UG_HUEU, UG_SATU, UG_VALU, _______,
+        _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,                       KC_F12,  UG_NEXT, UG_HUED, UG_SATD, UG_VALD, _______,
                                             _______, _______, _______,    _______, _______, _______
         ),
 
@@ -98,10 +94,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (!is_keyboard_master()) {
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+    return OLED_ROTATION_180;
   }
   return rotation;
 }
@@ -112,35 +109,6 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 #define L_ADJUST 8
 #define L_MOVEMENT 16
 #define L_MOVEMENT_SHFT 32
-
-
-/* char keylog_str[24] = {}; */
-
-/* const char code_to_name[60] = { */
-/*   ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', */
-/*   'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', */
-/*   'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', */
-/*   '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', */
-/*   'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\', */
-/*   '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '}; */
-
-/* void set_keylog(uint16_t keycode, keyrecord_t *record) { */
-/*   char name = ' '; */
-/*   if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || */
-/*       (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) { keycode = keycode & 0xFF; } */
-/*   if (keycode < 60) { */
-/*     name = code_to_name[keycode]; */
-/*   } */
-
-/*   // update keylog */
-/*   snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c", */
-/*            record->event.key.row, record->event.key.col, */
-/*            keycode, name); */
-/* } */
-
-/* void oled_render_keylog(void) { */
-/*   oled_write(keylog_str, false); */
-/* } */
 
 
 void oled_render_nothing(void) {
@@ -194,6 +162,7 @@ bool oled_task_user(void) {
   }
   return false;
 }
+#endif // OLED_ENABLE
 
 
 void matrix_scan_user(void) {
@@ -245,33 +214,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_achordion(keycode, record)) { return false; }
   return true;
 }
-
-
-
-/* bool process_record_user(uint16_t keycode, keyrecord_t *record) { */
-/* /\* #ifdef CONSOLE_ENABLE *\/ */
-/* /\*   if (record->event.pressed) { *\/ */
-/* /\*     uprintf("0x%04X,%u,%u,%u,%b,0x%02X,0x%02X,%u\n", *\/ */
-/* /\*             keycode, *\/ */
-/* /\*             record->event.key.row, *\/ */
-/* /\*             record->event.key.col, *\/ */
-/* /\*             get_highest_layer(layer_state), *\/ */
-/* /\*             record->event.pressed, *\/ */
-/* /\*             get_mods(), *\/ */
-/* /\*             get_oneshot_mods(), *\/ */
-/* /\*             record->tap.count *\/ */
-/* /\*             ); *\/ */
-/* /\*   } *\/ */
-/* /\* #endif *\/ */
-/* /\*   if (record->event.pressed) { *\/ */
-/* /\*     set_keylog(keycode, record); *\/ */
-/* /\*   } *\/ */
-/* /\*   if (!process_caps_word(keycode, record)) { *\/ */
-/* /\*     return false; *\/ */
-/* /\*   } *\/ */
-/*   return true; */
-/* } */
-#endif // OLED_ENABLE
 
 layer_state_t layer_state_set_user(layer_state_t state) {
   switch (biton32(state)) {

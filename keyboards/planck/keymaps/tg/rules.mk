@@ -1,5 +1,6 @@
 MOUSEKEY_ENABLE = yes
 TAP_DANCE_ENABLE = no
-CONSOLE_ENABLE = yes
+CONSOLE_ENABLE = no
 COMMAND_ENABLE = no
-SRC += features/caps_word.c
+
+SRC += features/achordion.c
