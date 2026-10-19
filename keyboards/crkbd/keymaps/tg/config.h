@@ -17,10 +17,13 @@
 #define PERMISSIVE_HOLD
 
 
-#define MOUSEKEY_INERTIA
-#define MOUSEKEY_DELAY 50
-#define MOUSEKEY_INTERVAL 16
-#define MOUSEKEY_MOVE_DELTA 8
-#define MOUSEKEY_MAX_SPEED 48
-#define MOUSEKEY_TIME_TO_MAX 16
-#define MOUSEKEY_FRICTION 24
+// Accelerating mouse (ramp, NO inertia/coast) — like the TOTEM: a slow precise start
+// for small selections, ramping up to a fast max for long drags, stops dead on release.
+//   start speed = MOVE_DELTA / INTERVAL          = 4/16ms  ~= 250 px/s  (precise)
+//   max speed   = MOVE_DELTA*MAX_SPEED / INTERVAL = 48/16ms ~= 3000 px/s (long drags)
+//   ramp to max = TIME_TO_MAX * INTERVAL         = 32*16ms ~= 0.5 s of holding
+#define MOUSEKEY_DELAY       0
+#define MOUSEKEY_INTERVAL    16
+#define MOUSEKEY_MOVE_DELTA  4
+#define MOUSEKEY_MAX_SPEED   12
+#define MOUSEKEY_TIME_TO_MAX 32

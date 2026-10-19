@@ -1,6 +1,11 @@
 #include QMK_KEYBOARD_H
 #include "features/achordion.h"
 
+enum layer_keycodes {
+  CK_LYR2 = SAFE_RANGE,
+  CK_LYR4,
+};
+
 enum custom_keycodes {
   LGUI_A = MT(MOD_LGUI, KC_A),
   LALT_S = MT(MOD_LALT, KC_S),
@@ -81,9 +86,9 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_ortho_4x12(
                           KC_CAPS, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TMUX_B,
-                          TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
-                          TG(2),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                          _______, _______, _______, KC_BSPC, OSL(1), FOUR_SP, FOUR_SP, LT(2, KC_ESC), KC_ENT,  KC_RALT, _______, _______
+                          CK_LYR4, LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
+                          CK_LYR2, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
+                          _______, _______, CK_LYR2, KC_BSPC, OSL(1), FOUR_SP, FOUR_SP, LT(2, KC_ESC), KC_ENT,  KC_RALT, _______, _______
                           ),
 
   [1] = LAYOUT_ortho_4x12(
@@ -97,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
                           _______, _______, MS_BTN3, MS_BTN2, MS_BTN1, _______, _______, MS_LEFT, MS_DOWN, MS_UP,   MS_RGHT, _______,
                           _______, _______, MS_ACL2, MS_ACL1, MS_ACL0, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
-                          _______, _______, _______, KC_DEL,  MO(3),   _______, _______, _______, _______, _______, _______, _______
+                          _______, _______, _______, KC_DEL,  _______, _______, _______, _______, _______, _______, _______, _______
                           ),
 
   [3] = LAYOUT_ortho_4x12(
@@ -109,16 +114,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [4] = LAYOUT_ortho_4x12(
                           KC_CAPS, _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
-                          TG(4),   _______, _______, _______, _______, LGUI__G, KC_HOME, CTRL_LE, KC_PGDN, KC_PGUP, CTRL_RI, KC_END,
+                          CK_LYR4, _______, _______, _______, _______, LGUI__G, KC_HOME, CTRL_LE, KC_PGDN, KC_PGUP, CTRL_RI, KC_END,
                           _______, _______, _______, _______, _______, LGUI__B, LGUI__N, LGUI__M, LGUI_CO, LGUI_DO, LGUI_SL, _______,
                           _______, _______, _______, KC_BSPC, OSL(1), LGUI_SP, LGUI_SP, LT(2, KC_ESC), KC_ENT,  _______, _______, _______
                           ),
 
   [5] = LAYOUT_ortho_4x12(
                           KC_CAPS, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
-                          TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
-                          TG(5),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                          _______, _______, _______, KC_BSPC, OSL(1), FOUR_SP, FOUR_SP, LT(2, KC_ESC), KC_ENT,  KC_RALT, _______, _______
+                          CK_LYR4, LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,    KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
+                          CK_LYR2, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
+                          _______, _______, CK_LYR2, KC_BSPC, OSL(1), FOUR_SP, FOUR_SP, LT(2, KC_ESC), KC_ENT,  KC_RALT, _______, _______
                           )
 
 };
@@ -185,6 +190,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (keycode == OSL(1) && record->event.pressed && right_ctrl_held) {
     tap_code(KC_TAB);
     return false;
+  }
+
+  switch (keycode) {
+    case CK_LYR2:
+      if (record->event.pressed) {
+        if (IS_LAYER_ON(2)) {
+          layer_clear();
+        } else {
+          layer_clear();
+          layer_on(2);
+        }
+      }
+      return false;
+    case CK_LYR4:
+      if (record->event.pressed) {
+        if (IS_LAYER_ON(4)) {
+          layer_clear();
+        } else {
+          layer_clear();
+          layer_on(4);
+        }
+      }
+      return false;
   }
 
   return true;

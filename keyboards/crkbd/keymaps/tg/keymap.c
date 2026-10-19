@@ -2,6 +2,10 @@
 #include "features/achordion.h"
 
 
+enum layer_keycodes {
+  MOV_MOU = SAFE_RANGE,   // hold = momentary MOVEMENT (4); tap = toggle NUM/mouse (2)
+};
+
 enum custom_keycodes {
   LGUI_A = MT(MOD_LGUI, KC_A),
   LALT_S = MT(MOD_LALT, KC_S),
@@ -51,8 +55,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
         KC_CAPS, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    TMUX_B,
         TG(4),   LGUI_A,  LALT_S,  LSFT_D,  LCTL_F,  KC_G,                         KC_H,    LCTL_J,  RSFT_K,  LALT_L,  RGUI_SC, KC_QUOT,
-        TG(2),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                            KC_BSPC, OSL(1), MO(4),      LGUI_SP, LT(2, KC_ESC), KC_ENT
+        TG(2),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_QUOT,
+                                            KC_BSPC, OSL(1), MOV_MOU,    LGUI_SP, LT(2, KC_ESC), KC_ENT
         ),
 
   [1] = LAYOUT_split_3x6_3(
@@ -214,15 +218,43 @@ bool achordion_chord(uint16_t tap_hold_keycode,
 
 static bool right_ctrl_held = false;
 
+// MOV_MOU: hold = momentary MOVEMENT layer (4); a clean tap = toggle the NUM/mouse
+// layer (2). Mirrors the TOTEM inner-left thumb (mov_or_mouse). mov_mou_used guards
+// against a fast movement burst being misread as a tap.
+static uint16_t mov_mou_timer = 0;
+static bool mov_mou_active = false;
+static bool mov_mou_used = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (keycode == LCTL_J) {
     right_ctrl_held = record->event.pressed;
+  }
+
+  // Any other key pressed while the thumb is held => it was a hold (movement), not a tap.
+  if (mov_mou_active && record->event.pressed && keycode != MOV_MOU) {
+    mov_mou_used = true;
   }
 
   if (!process_achordion(keycode, record)) { return false; }
 
   if (keycode == OSL(1) && record->event.pressed && right_ctrl_held) {
     tap_code(KC_TAB);
+    return false;
+  }
+
+  if (keycode == MOV_MOU) {
+    if (record->event.pressed) {
+      mov_mou_active = true;
+      mov_mou_used = false;
+      mov_mou_timer = timer_read();
+      layer_on(4);
+    } else {
+      layer_off(4);
+      mov_mou_active = false;
+      if (!mov_mou_used && timer_elapsed(mov_mou_timer) < TAPPING_TERM) {
+        layer_invert(2);   // tap: toggle NUM/mouse layer on/off
+      }
+    }
     return false;
   }
 
