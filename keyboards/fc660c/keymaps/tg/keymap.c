@@ -2,8 +2,21 @@
 #include "features/caps_word.h"
 
 
+enum layer_keycodes {
+  GAME = SAFE_RANGE,   // game mode: layer 6 as default, every toggled layer off
+};
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (!process_caps_word(keycode, record)) {
+    return false;
+  }
+  // DF(6) alone leaves layers 2 and 4 (toggled on to reach this key) above
+  // layer 6, so their home-row mods would still win.
+  if (keycode == GAME) {
+    if (record->event.pressed) {
+      layer_clear();
+      default_layer_set(1UL << 6);
+    }
     return false;
   }
   return true;
@@ -101,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB ,_______,_______,_______,_______,_______,_______,KC_LEFT      ,KC_DOWN,KC_UP  ,KC_RGHT      ,KC_BSPC,_______,_______,     _______,
         _______,_______,_______,_______,_______,_______,KC_HOME,LCTL(KC_LEFT),KC_PGDN,KC_PGUP,LCTL(KC_RGHT),KC_END ,       KC_ENTER,
         _______,_______,_______,_______,_______,_______,_______,_______      ,_______,_______,_______      ,_______,       _______  ,
-        KC_TRNS,DF(6)  ,DF(0),                TG(5)  ,                      _______,_______,_______      ,       _______,_______  ,_______
+        KC_TRNS,GAME   ,DF(0),                TG(5)  ,                      _______,_______,_______      ,       _______,_______  ,_______
     ),
 
   [5] = LAYOUT(
